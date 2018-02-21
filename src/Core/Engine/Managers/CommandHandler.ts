@@ -1,2 +1,4 @@
-export default class CommandHandler {
+import Manager from "../../../Structures/Manager";
+
+export default class CommandHandler extends Manager {
 }
