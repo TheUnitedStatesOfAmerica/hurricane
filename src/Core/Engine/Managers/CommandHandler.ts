@@ -1,7 +1,7 @@
 import Manager from "../../../Structures/Manager";
 import Client from "../../Client"
 import { Collection } from "branches";
-import Command from "../../../Structures/Command";
+import Command from "../../../Structures/Base/Command";
 
 export default class CommandHandler extends Manager {
     constructor(client: Client) {
@@ -13,7 +13,7 @@ export default class CommandHandler extends Manager {
         return new Collection<Command>();
     }
 
-    private addCommand(): boolean | Error {
+    public addCommand(): boolean | Error {
         return true;
     }
 }

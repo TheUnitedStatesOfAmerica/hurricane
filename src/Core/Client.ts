@@ -1,5 +1,5 @@
 import {Collection} from "branches";
-import Command from "../Structures/Command";
+import Command from "../Structures/Base/Command";
 
 // import some water
 
