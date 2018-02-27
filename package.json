@@ -4,7 +4,10 @@
   "description": "water abstraction layer / framework",
   "main": "index.js",
   "dependencies": {
-    "branches": "github:yuki-bot/branches"
+    "@types/eventemitter3": "^2.0.2",
+    "branches": "github:yuki-bot/branches",
+    "discord-models": "yuki-bot/discord-models.ts",
+    "eventemitter3": "^3.0.1"
   },
   "devDependencies": {},
   "scripts": {
