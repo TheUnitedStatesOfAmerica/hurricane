@@ -14,12 +14,12 @@ export enum CollectorEvent {
 }
 
 export default class Collector extends EventEmitter {
-    public channelId: Snowflake;
+    public channelId: Snowflake["value"];
     public awaiter: Awaiter;
     public timeout?: number;
     public stopped: boolean = false;
 
-    constructor(options: { channelId: Snowflake; timeout: number }, awaiter: Awaiter) {
+    constructor(options: { channelId: Snowflake["value"]; timeout?: number }, awaiter: Awaiter) {
         super();
 
         this.channelId = options.channelId;
@@ -32,7 +32,7 @@ export default class Collector extends EventEmitter {
         }, options.timeout || 10000);
     }
 
-    await(amount: number, filter?: (msg: Message) => boolean, timeout?: number): Promise<Map<Message["id"], Message>> {
+    public await(amount: number, filter?: (msg: Message) => boolean, timeout?: number): Promise<Map<Message["id"], Message>> {
         return new Promise((resolve, reject) => {
             const messages = new Map();
 
@@ -60,13 +60,13 @@ export default class Collector extends EventEmitter {
         });
     }
 
-    check(message: Message) {
+    public check(message: Message) {
         if (message.channelId === this.channelId) {
             this.emit(CollectorEvent.Message, message);
         }
     }
 
-    destroy() {
+    public destroy() {
         this.emit(CollectorEvent.End);
 
         this.removeAllListeners();
