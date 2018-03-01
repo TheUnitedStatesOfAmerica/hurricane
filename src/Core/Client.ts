@@ -1,4 +1,5 @@
 import {Collection} from "branches";
+import Water from "water";
 import Command from "../Structures/Base/Command";
 import Supervisor from './Engine/Supervisor';
 import Manager from '../Structures/Manager';
@@ -14,6 +15,11 @@ export default class Client extends Water {
     constructor(token: string) {
         super(token);
         this.managers = this.supervisor.loadManagers();
+
+        // Note: We pass the entire command handler into this.commands
+        // and disallow accessing the commands from the handler,
+        // except through its own methods.
+        // This is to avoid the actual commands being mutable
         this.commands = new CommandHandler();
         this.commands.loadCommands();
     }
