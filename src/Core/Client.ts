@@ -3,18 +3,21 @@ import Water from "water";
 import Command from "../Structures/Base/Command";
 import Supervisor from './Engine/Supervisor';
 import Manager from '../Structures/Manager';
-import CommandHandler from './Engine/Managers/CommandHandler';
+import CommandHandler from './Engine/CommandHandler';
+import EventEmitter from "eventemitter3";
 
 // import some water
 
 export default class Client extends Water {
     public commands: CommandHandler;
     public managers: Collection<Manager>;
-    private supervisor: Supervisor = new Supervisor();
+    public events: EventEmitter;
+    private supervisor: Supervisor;
 
     constructor(token: string) {
         super(token);
-        this.managers = this.supervisor.loadManagers();
+        this.events = new EventEmitter();
+        this.managers = new Supervisor(this);
 
         // Note: We pass the entire command handler into this.commands
         // and disallow accessing the commands from the handler,

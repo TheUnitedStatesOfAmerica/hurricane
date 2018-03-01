@@ -1,14 +1,13 @@
-import Manager from "../../Structures/Manager";
+import EventManager from "./Managers/EventManager";
 import { Collection } from "branches";
-import { Managers, IManagers } from "./Managers/index";
+import Manager from "../../Structures/Manager";
+import Client from "../Client";
 
+// TODO: IMPROVE ALL THIS SHIT ITS GROSS
 export default class Supervisor {
-    public loadManagers(): Collection<Manager> {
-        const managers = new Collection<Manager>();
-        Object.keys(Managers).forEach((key: keyof IManagers) => {
-            const manager = Managers[key];
-            managers.set(key, manager);
-        })
-        return managers;
+    public managers: Collection<Manager> = new Collection();
+
+    public constructor(client: Client) {
+        this.managers.set("EventManager", new EventManager(client, config));
     }
 }
