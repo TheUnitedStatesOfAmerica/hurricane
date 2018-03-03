@@ -1,11 +1,22 @@
-import Manager from "../../../Structures/Manager";
-import Client from "../../Client"
+import Manager from "../../Structures/Manager";
+import Client from "../Client"
 import { Collection } from "branches";
-import Command from '../../../Structures/Base/Command';
+import Command from '../../Structures/Base/Command';
 
 export default class CommandHandler extends Manager {
-
     protected commands: Collection<Command> = new Collection<Command>();
+
+    private client: Client;
+
+    public constructor(client: Client) {
+        super();
+
+        this.client = client;
+    }
+
+    public init(): any {
+        // TODO: implement from Manager
+    }
 
     public loadCommands(): Collection<Command> {
         return this.commands;

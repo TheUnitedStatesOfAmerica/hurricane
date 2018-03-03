@@ -4,6 +4,7 @@ import Collector from './Collector';
 import Menu from './Base/Menu';
 import MenuOption from './Base/MenuOption';
 import Client from '../Core/Client';
+import { Snowflake } from 'discord-models';
 import { EmbedField } from 'discord-models/channel';
 import { User } from 'discord-models/user';
 
@@ -11,7 +12,14 @@ export default class MenuBuilder extends Menu {
     public awaiter: Awaiter;
     private collector: Collector;
     private client: Client;
-    constructor(awaiter: Awaiter) { super(); }
+
+    public constructor(client: Client, channelId: Snowflake, awaiter: Awaiter) {
+        super();
+
+        this.awaiter = awaiter;
+        this.client = client;
+        this.collector = new Collector({ channelId: channelId.value }, awaiter);
+    }
 
     public addOption(option: MenuOption): Menu | Error {
         const o = this.options.get(option.title);
@@ -52,7 +60,7 @@ export default class MenuBuilder extends Menu {
         return false;
     }
 
-    protected await(options: {user: {id: User["id"]}, timeout: number }, resolve, reject) {
+    protected await(options: {user: {id: User["id"]}, timeout: number }, resolve: Function, reject: Function) {
         this.collector.await(1, message => message.author.id === options.user.id, options.timeout);
     }
 }

@@ -1,7 +1,7 @@
 import Manager from "../../../Structures/Manager";
 import RedisConnector from "../RedisConnector";
 import { RedisOptions, Redis } from "ioredis";
-import { EventEmitter } from "eventemitter3";
+import * as EventEmitter from "eventemitter3";
 import Client from "../../Client";
 
 export default class EventManager extends Manager {

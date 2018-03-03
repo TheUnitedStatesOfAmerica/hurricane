@@ -4,13 +4,15 @@
   "description": "water abstraction layer / framework",
   "main": "index.js",
   "dependencies": {
-    "@types/eventemitter3": "^2.0.2",
     "branches": "github:yuki-bot/branches",
     "discord-models": "yuki-bot/discord-models.ts",
     "eventemitter3": "^3.0.1",
+    "ioredis": "^3.2.2",
     "water": "yuki-bot/water"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@types/ioredis": "^3.2.5"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

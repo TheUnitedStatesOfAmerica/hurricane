@@ -1,13 +1,13 @@
-import { RedisOptions, Redis } from "ioredis";
+import Redis = require("ioredis");
 
 export default class RedisConnector {
-    public config: RedisOptions;
+    public config: Redis.RedisOptions;
 
-    constructor(config: RedisOptions) {
+    constructor(config: Redis.RedisOptions) {
         this.config = config;
     }
 
-    public createConnection(): Redis {
+    public createConnection(): Redis.Redis {
         return new Redis(this.config);
     }
 }

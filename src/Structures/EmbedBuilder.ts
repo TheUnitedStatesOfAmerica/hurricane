@@ -1,16 +1,16 @@
 import { Embed, EmbedAuthor, EmbedField, EmbedFooter, EmbedImage, EmbedThumbnail } from 'discord-models/channel';
-import {Client} from '..';
+import { Client } from '..';
 
 export default class EmbedBuilder implements Embed {
     public author?: EmbedAuthor;
-    public colour: number = 7506394;
+    public color: number = 7506394;
     public description?: string;
     public fields: EmbedField[] = [];
     public footer?: EmbedFooter;
     public image?: EmbedImage;
-    public kind: string = 'rich';
     public thumbnail?: EmbedThumbnail;
     public title?: string;
+    public type: string = 'rich';
     public url?: string;
 
     constructor(public client: Client) {}
@@ -32,7 +32,7 @@ export default class EmbedBuilder implements Embed {
     }
 
     public setColor(c: number) {
-        return this.colour = c;
+        return this.color = c;
     }
 
     public setDescription(d: string) {
@@ -69,15 +69,15 @@ export default class EmbedBuilder implements Embed {
 
     protected make(): Embed {
         return {
-            colour: this.colour,
+            color: this.color,
             description: this.description,
-            url: this.url,
             fields: this.fields,
             footer: this.footer,
             image: this.image,
-            kind: this.kind,
             thumbnail: this.thumbnail,
             title: this.title,
+            type: this.type,
+            url: this.url,
         } as Embed
     }
 

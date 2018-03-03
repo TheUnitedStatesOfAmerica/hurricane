@@ -1,4 +1,4 @@
-import { Snowflake } from 'discord-models/discord-models';
+import { Snowflake } from 'discord-models';
 import { Message } from 'discord-models/channel';
 import Awaiter from '../Core/Engine/Awaiter';
 import { EventEmitter } from 'eventemitter3';
@@ -16,7 +16,7 @@ export enum CollectorEvent {
 export default class Collector extends EventEmitter {
     public channelId: Snowflake["value"];
     public awaiter: Awaiter;
-    public timeout?: number;
+    public timeout?: NodeJS.Timer;
     public stopped: boolean = false;
 
     constructor(options: { channelId: Snowflake["value"]; timeout?: number }, awaiter: Awaiter) {
@@ -61,7 +61,7 @@ export default class Collector extends EventEmitter {
     }
 
     public check(message: Message) {
-        if (message.channelId === this.channelId) {
+        if (message.channelId.value === this.channelId) {
             this.emit(CollectorEvent.Message, message);
         }
     }
