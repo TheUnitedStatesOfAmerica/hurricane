@@ -8,10 +8,12 @@ import * as EventEmitter from "eventemitter3";
 export default class Client extends Water {
     public commands: CommandHandler;
     public events: EventEmitter;
+    public config: {prefixes: [string]};
     private supervisor: Supervisor;
 
-    constructor(token: string) {
+    constructor(token: string, options: {prefixes: [string]}) {
         super(token);
+        this.config = options;
         this.events = new EventEmitter();
         this.supervisor = new Supervisor(this);
 
