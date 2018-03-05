@@ -8,6 +8,6 @@ export default class Supervisor {
     public managers: Collection<Manager> = new Collection();
 
     public constructor(client: Client) {
-        this.managers.set("EventManager", new EventManager(client, config));
+        this.managers.set("EventManager", new EventManager(client, client.config.redis));
     }
 }

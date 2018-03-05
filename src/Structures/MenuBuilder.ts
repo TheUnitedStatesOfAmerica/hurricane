@@ -4,7 +4,7 @@ import Collector from './Collector';
 import Menu from './Base/Menu';
 import MenuOption from './Base/MenuOption';
 import Client from '../Core/Client';
-import { Snowflake } from 'discord-models';
+import { Snowflake } from 'discord-models/discord-models';
 import { EmbedField } from 'discord-models/channel';
 import { User } from 'discord-models/user';
 

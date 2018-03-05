@@ -1,4 +1,4 @@
-import { Embed, EmbedAuthor, EmbedField, EmbedFooter, EmbedImage, EmbedThumbnail } from 'discord-models/channel';
+import { Embed, EmbedAuthor, EmbedField, EmbedFooter, EmbedImage, EmbedThumbnail, Channel } from 'discord-models/channel';
 import { Client } from '..';
 
 export default class EmbedBuilder implements Embed {
@@ -81,7 +81,7 @@ export default class EmbedBuilder implements Embed {
         } as Embed
     }
 
-    public send() {
-        return this.client.createMessage({ embed: this.make() });
+    public send(channel: Channel["id"]) {
+        return this.client.createMessage(channel, { embed: this.make() });
     }
 }

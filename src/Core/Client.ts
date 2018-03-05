@@ -1,4 +1,4 @@
-import Water from "water";
+import Water, { WaterOptions } from "water";
 import Supervisor from './Engine/Supervisor';
 import CommandHandler from './Engine/CommandHandler';
 import * as EventEmitter from "eventemitter3";
@@ -14,7 +14,7 @@ export default class Client extends Water {
     private supervisor: Supervisor;
 
     constructor(token: string, options: {prefixes: [string]}) {
-        super(token);
+        super({ token: token } as WaterOptions);
         this.config = options;
         this.events = new EventEmitter();
         this.supervisor = new Supervisor(this);
