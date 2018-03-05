@@ -2,6 +2,7 @@ import Water from "water";
 import Supervisor from './Engine/Supervisor';
 import CommandHandler from './Engine/CommandHandler';
 import * as EventEmitter from "eventemitter3";
+import Awaiter from "./Engine/Awaiter";
 
 // import some water
 
@@ -9,6 +10,7 @@ export default class Client extends Water {
     public commands: CommandHandler;
     public events: EventEmitter;
     public config: {prefixes: [string]};
+    public awaiter: Awaiter = new Awaiter();
     private supervisor: Supervisor;
 
     constructor(token: string, options: {prefixes: [string]}) {

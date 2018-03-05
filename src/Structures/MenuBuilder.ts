@@ -13,12 +13,12 @@ export default class MenuBuilder extends Menu {
     private collector: Collector;
     private client: Client;
 
-    public constructor(client: Client, channelId: Snowflake, awaiter: Awaiter) {
+    public constructor(client: Client, channelId: Snowflake) {
         super();
 
-        this.awaiter = awaiter;
         this.client = client;
-        this.collector = new Collector({ channelId: channelId.value }, awaiter);
+        this.awaiter = client.awaiter;
+        this.collector = new Collector({ channelId: channelId.value }, this.awaiter);
     }
 
     public addOption(option: MenuOption): Menu | Error {

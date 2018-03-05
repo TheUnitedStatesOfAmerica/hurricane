@@ -3,6 +3,7 @@ import Client from "../Client"
 import { Collection } from "branches";
 import Command from '../../Structures/Base/Command';
 import { Message } from "discord-models/channel";
+import Context from "../../Structures/Context";
 
 export default class CommandHandler extends Manager {
     protected commands: Collection<Command> = new Collection<Command>();
@@ -50,8 +51,10 @@ export default class CommandHandler extends Manager {
         return this.prefixes.find(p => content.startsWith(p));
     }
 
-    public process(message: Message) {
+    public process(message: Message): Command | null {
         const prefix = this.checkPrefix(message);
+        const channel = this.client.store.channel.get(message.channelId);
+        if(!channel) throw new Error('Could not retrieve channel details from store!');
         if(!prefix) return null;
         const args: string[] = message.content.slice(prefix.length).trim().split(' ');
         let command: Command | undefined = this.commands.find(() => args[0]);
@@ -63,7 +66,14 @@ export default class CommandHandler extends Manager {
             if(!command) return null;
         }
 
-        if(command.nsfw && message.channelId)
-
+        if(command.nsfw && !channel.nsfw) return null;
+        const ctx = new Context(this.client, message, args, command);
+        command.process_(ctx).then((response: any) => {
+            if(typeof response !== 'string') return;
+            else this.client.createMessage(message.channelId, response);
+        }, (err: Error) => {
+            throw err;
+        })
+        return command;
     }
 }
