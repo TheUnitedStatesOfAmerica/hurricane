@@ -1,21 +1,19 @@
 import Manager from "../../../Structures/Manager";
 import RedisConnector from "../RedisConnector";
-import { RedisOptions, Redis } from "ioredis";
+import { Redis } from "ioredis";
 import * as EventEmitter from "eventemitter3";
 import Client from "../../Client";
 
 export default class EventManager extends Manager {
-    public config: RedisOptions;
     public events: EventEmitter;
-    protected redis: RedisConnector;
-    protected connection: Redis;
+    protected redisConnector: RedisConnector;
+    protected redisConnection: Redis;
 
-    constructor(client: Client, config: RedisOptions) {
+    constructor(client: Client, redisConnector: RedisConnector) {
         super();
-        this.redis = new RedisConnector(config);
+        this.redisConnector = redisConnector;
         this.events = client.events;
-        this.connection = this.redis.createConnection();
-        this.config = config;
+        this.redisConnection = redisConnector.createConnection();
 
     }
 
@@ -26,7 +24,7 @@ export default class EventManager extends Manager {
 
     protected async startEventLoop() {
         for ( ; ; ) {
-            const [, msg] = await this.connection.send_command(
+            const [, msg] = await this.redisConnection.send_command(
                 "blpop",
                 "exchange:gateway_events",
                 0,

@@ -51,18 +51,18 @@ export default class CommandHandler extends Manager {
         return this.prefixes.find(p => content.startsWith(p));
     }
 
-    private check(message: Message) {
+    private async check(message: Message) {
         if(message.author.bot) return;
-        if(!this.process(message)) {
+
+        if(!(await this.process(message))) {
             this.client.awaiter.invokeAllCollectors(message);
         }
     }
 
-    protected process(message: Message): Command | null {
+    protected async process(message: Message): Promise<Command | null> {
         const prefix = this.checkPrefix(message);
-        const channel = this.client.store.channel.get(message.channelId);
-        if(!channel) throw new Error('Could not retrieve channel details from store!');
         if(!prefix) return null;
+
         const args: string[] = message.content.slice(prefix.length).trim().split(' ');
         let command: Command | undefined = this.commands.find(() => args[0]);
 
@@ -73,7 +73,38 @@ export default class CommandHandler extends Manager {
             if(!command) return null;
         }
 
-        if(command.nsfw && !channel.nsfw) return null;
+        // If the command is NSFW, we need to perform a check that the channel
+        // is also NSFW.
+        //
+        // We pull this data from Redis, as we don't want an expensive operation
+        // (querying a DB).
+        //
+        // If the command is NSFW but the channel is not, we just return null.
+        if (command.nsfw) {
+            let cachedChannel;
+
+            try {
+                cachedChannel = await this.client.store.channels.get(message.channelId);
+            } catch (e) {
+                // TODO: log this, an error occurred while deserializing an
+                // object from redis!
+
+                return null;
+            }
+
+            // If we can't get the channel for some reason (invalid state?),
+            // just return: better to be safe than sorry.
+            if (!cachedChannel) {
+                // TODO: log invalid state
+
+                return null;
+            }
+
+            if (!cachedChannel.nsfw) {
+                return null;
+            }
+        }
+
         const ctx = new Context(this.client, message, args, command);
         command.process_(ctx).then((response: any) => {
             if(typeof response !== 'string') return;
