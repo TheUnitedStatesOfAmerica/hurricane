@@ -18,7 +18,7 @@ export default class CommandHandler extends Manager {
     }
 
     public init(): any {
-        // TODO: implement from Manager
+        this.client.events.on('message', (m) => { this.check(m); });
     }
 
     public loadCommands(): Collection<Command> {
@@ -51,7 +51,14 @@ export default class CommandHandler extends Manager {
         return this.prefixes.find(p => content.startsWith(p));
     }
 
-    public process(message: Message): Command | null {
+    private check(message: Message) {
+        if(message.author.bot) return;
+        if(!this.process(message)) {
+            this.client.awaiter.invokeAllCollectors(message);
+        }
+    }
+
+    protected process(message: Message): Command | null {
         const prefix = this.checkPrefix(message);
         const channel = this.client.store.channel.get(message.channelId);
         if(!channel) throw new Error('Could not retrieve channel details from store!');
