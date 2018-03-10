@@ -4,12 +4,15 @@ import { Collection } from "branches";
 import Command from '../../Structures/Base/Command';
 import { Message } from "discord-models/channel";
 import Context from "../../Structures/Context";
+import DefaultCategory from "../../Structures/Base/DefaultCategory";
+import Category from "../../Structures/Base/Category";
 
 export default class CommandHandler extends Manager {
     protected commands: Collection<Command> = new Collection<Command>();
 
     private client: Client;
     private prefixes = this.client.config.prefixes;
+    private categories: Collection<Category> = new Collection();
 
     public constructor(client: Client) {
         super();
@@ -18,6 +21,8 @@ export default class CommandHandler extends Manager {
     }
 
     public init(): any {
+        const defaultCategory = new DefaultCategory(this.client);
+        this.categories.set(defaultCategory.name, defaultCategory);
         this.client.events.on('message', (m) => { this.check(m); });
     }
 
@@ -25,16 +30,26 @@ export default class CommandHandler extends Manager {
         return this.commands;
     }
 
-    public addCommand(command: Command): Command | Error {
-        if(this.commands.get(command.name)) return new Error('Command already exists!');
-        else {
-            try {
-                this.commands.set(command.name, command);
-                return this.commands.get(command.name);
-            } catch(e) {
-                return new Error('Could not add command!');
+    public addCommand(Command: Command): Command {
+        if(this.commands.get(Command.constructor.name)) throw new Error('Command already exists!');
+        try {
+            const command: Command = new Command(this.client);
+            if(command.category) {
+                const category: Category = this.categories.get(command.category.name);
+                if(category) category.commands.set(Command.constructor.name, command);
+                else throw new Error('Category is unregistered');
             }
+            this.commands.set(Command.constructor.name, command);
+            return this.commands.get(command.name);
+        } catch(e) {
+            throw new Error('Could not add command!');
         }
+    }
+
+    public addCategory(Category: Category): Category {
+        const category = new Category(this.client);
+        this.categories.set(category.name, category);
+        return category;
     }
 
     public getAll(): Collection<Command> {
