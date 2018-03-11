@@ -10,7 +10,7 @@ export default class Client extends Water {
     commands: CommandHandler;
     events: EventEmitter;
     config: {
-        prefixes: [string];
+        prefixes: string[];
         redis: RedisOptions;
     };
     awaiter: Awaiter;
@@ -18,7 +18,7 @@ export default class Client extends Water {
     redisConnector: RedisConnector;
     store: StoreContainer;
     constructor(token: string, options: {
-        prefixes: [string];
+        prefixes: string[];
         redis: RedisOptions;
     });
 }

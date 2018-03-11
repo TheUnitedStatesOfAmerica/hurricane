@@ -12,7 +12,7 @@ import StoreContainer from "./Store/StoreContainer";
 export default class Client extends Water {
     public commands: CommandHandler;
     public events: EventEmitter;
-    public config: { prefixes: [string], redis: RedisOptions };
+    public config: { prefixes: string[], redis: RedisOptions };
     public awaiter: Awaiter = new Awaiter();
     public redis: Redis;
     public redisConnector: RedisConnector;
@@ -20,7 +20,7 @@ export default class Client extends Water {
     // todo
     // private supervisor: Supervisor;
 
-    constructor(token: string, options: { prefixes: [string], redis: RedisOptions }) {
+    constructor(token: string, options: { prefixes: string[], redis: RedisOptions }) {
         super({ token: token } as WaterOptions);
         this.config = options;
         this.events = new EventEmitter();
