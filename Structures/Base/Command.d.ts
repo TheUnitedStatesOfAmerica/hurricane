@@ -9,6 +9,6 @@ export default abstract class Command {
     category?: Category;
     options?: CommandOptions;
     nsfw?: boolean;
-    abstract process_: (ctx: Context) => Promise<void>;
+    abstract process_(ctx: Context): Promise<void>;
     constructor();
 }
