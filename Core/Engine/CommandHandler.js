@@ -8,9 +8,9 @@ class CommandHandler extends Manager_1.default {
     constructor(client) {
         super();
         this.commands = new branches_1.Collection();
-        this.prefixes = this.client.config.prefixes;
         this.categories = new branches_1.Collection();
         this.client = client;
+        this.prefixes = client.config.prefixes;
     }
     init() {
         const defaultCategory = new DefaultCategory_1.default(this.client);

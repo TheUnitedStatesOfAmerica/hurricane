@@ -11,52 +11,34 @@ class Loader {
      * client's command handler.
      *
      * @param {string} absolutePath Absolute path to the command files.
-     * @returns {Promise.<null>} Promise that resolves when all commands have
+     * @returns {Promise.<void>} Promise that resolves when all commands have
      * been loaded.
      * @memberof Loader
      * @method
      * @public
      */
-    loadCategories(absolutePath) {
-        return this.add(absolutePath, this.client.commands.addCategory);
+    async loadCategories(absolutePath) {
+        const filenames = await this.readDirectory(absolutePath);
+        for (const filename in filenames) {
+            this.client.commands.addCategory(require(filename));
+        }
     }
     /**
      * Loads the files in a directory as commands and inserts them into the
      * client's command handler.
      *
      * @param {string} absolutePath Absolute path to the command files.
-     * @returns {Promise.<null>} Promise that resolves when all commands have
+     * @returns {Promise.<void>} Promise that resolves when all commands have
      * been loaded.
      * @memberof Loader
      * @method
      * @public
      */
-    loadCommands(absolutePath) {
-        return this.add(absolutePath, this.client.commands.addCommand);
-    }
-    /**
-     * Retrieves the files in the given path, requires their contents, and then
-     * calls the provided function.
-     *
-     * @param {string} absolutePath Absolute path to the files.
-     * @returns {Promise.<null>} Promise that resolves when all files have been
-     * required.
-     * @async
-     * @memberof Loader
-     * @method
-     * @private
-     */
-    async add(absolutePath, func) {
+    async loadCommands(absolutePath) {
         const filenames = await this.readDirectory(absolutePath);
         for (const filename of filenames) {
-            if (!filename.endsWith('.js')) {
-                continue;
-            }
-            const filePath = path.join(absolutePath, filename);
-            const item = require(filePath);
-            func(item);
+            this.client.commands.addCommand(require(filename));
         }
-        return null;
     }
     /**
      * Reads the filenames of a directory, resolving to an array of them.
@@ -75,7 +57,8 @@ class Loader {
                     reject(err);
                 }
                 else {
-                    resolve(files);
+                    resolve(files.filter(f => f.endsWith('.js'))
+                        .map(f => path.join(absolutePath, f)));
                 }
             });
         });

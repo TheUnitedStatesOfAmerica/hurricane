@@ -11,13 +11,14 @@ export default class CommandHandler extends Manager {
     protected commands: Collection<Command> = new Collection<Command>();
 
     private client: Client;
-    private prefixes = this.client.config.prefixes;
+    private prefixes: string[];
     private categories: Collection<Category> = new Collection();
 
     public constructor(client: Client) {
         super();
 
         this.client = client;
+        this.prefixes = client.config.prefixes;
     }
 
     public init(): any {

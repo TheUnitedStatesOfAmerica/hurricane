@@ -1,7 +1,5 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import Command from '../../Structures/Base/Command';
-import Category from '../../Structures/Base/Category';
 import Client from '../Client';
 
 export default class Loader {
@@ -13,14 +11,18 @@ export default class Loader {
      * client's command handler.
      *
      * @param {string} absolutePath Absolute path to the command files.
-     * @returns {Promise.<null>} Promise that resolves when all commands have
+     * @returns {Promise.<void>} Promise that resolves when all commands have
      * been loaded.
      * @memberof Loader
      * @method
      * @public
      */
-    public loadCategories(absolutePath: string): Promise<null> {
-        return this.add<Category>(absolutePath, this.client.commands.addCategory);
+    public async loadCategories(absolutePath: string): Promise<void> {
+        const filenames = await this.readDirectory(absolutePath);
+
+        for (const filename in filenames) {
+            this.client.commands.addCategory(require(filename));
+        }
     }
 
     /**
@@ -28,43 +30,18 @@ export default class Loader {
      * client's command handler.
      *
      * @param {string} absolutePath Absolute path to the command files.
-     * @returns {Promise.<null>} Promise that resolves when all commands have
+     * @returns {Promise.<void>} Promise that resolves when all commands have
      * been loaded.
      * @memberof Loader
      * @method
      * @public
      */
-    public loadCommands(absolutePath: string): Promise<null> {
-        return this.add<Command>(absolutePath, this.client.commands.addCommand);
-    }
-
-    /**
-     * Retrieves the files in the given path, requires their contents, and then
-     * calls the provided function.
-     *
-     * @param {string} absolutePath Absolute path to the files.
-     * @returns {Promise.<null>} Promise that resolves when all files have been
-     * required.
-     * @async
-     * @memberof Loader
-     * @method
-     * @private
-     */
-    private async add<T>(absolutePath: string, func: (item: T) => void): Promise<null> {
+    public async loadCommands(absolutePath: string): Promise<void> {
         const filenames = await this.readDirectory(absolutePath);
 
         for (const filename of filenames) {
-            if (!filename.endsWith('.js')) {
-                continue;
-            }
-
-            const filePath = path.join(absolutePath, filename);
-            const item = require(filePath);
-
-            func(item);
+            this.client.commands.addCommand(require(filename));
         }
-
-        return null;
     }
 
     /**
@@ -83,7 +60,8 @@ export default class Loader {
                 if (err) {
                     reject(err);
                 } else {
-                    resolve(files);
+                    resolve(files.filter(f => f.endsWith('.js'))
+                        .map(f => path.join(absolutePath, f)));
                 }
             });
         });
