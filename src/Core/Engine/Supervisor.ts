@@ -10,4 +10,10 @@ export default class Supervisor {
     public constructor(client: Client) {
         this.managers.set("EventManager", new EventManager(client, client.redisConnector));
     }
+
+    public init() {
+        this.managers.map((m: Manager) => {
+            m.init();
+        })
+    }
 }
