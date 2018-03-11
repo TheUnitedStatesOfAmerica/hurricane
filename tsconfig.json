@@ -1,16 +1,24 @@
-
 {
-    "compilerOptions": {
-      "target": "ES2017",
-      "module": "commonjs",
-      "lib": ["es5", "dom", "es2017"],
-      "strict": true,
-      "noImplicitAny": true,
-      "strictNullChecks": true,
-      "noUnusedLocals": true,
-      "noUnusedParameters": true,
-      "experimentalDecorators": true,
-      "outDir": "dist/",
-      "rootDir": "src/"
-    }
-  }
+  "compilerOptions": {
+    "declaration": true,
+    "declarationDir": "./",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "module": "commonjs",
+    "lib": ["es5", "es2017"],
+    "moduleResolution": "node",
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "outDir": "./",
+    "strict": true,
+    "strictNullChecks": true,
+    "stripInternal": true,
+    "sourceMap": true,
+    "target": "ES2017"
+  },
+  "include": ["src"],
+  "exclude": []
+}
