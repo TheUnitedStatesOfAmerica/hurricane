@@ -1,6 +1,5 @@
 import Collector from '../../Structures/Collector';
 import { Snowflake } from "discord-models";
-import { Collection } from 'branches';
 import { Message } from 'discord-models/channel';
 
 export default class Awaiter {

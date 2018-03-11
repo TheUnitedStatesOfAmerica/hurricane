@@ -1,4 +1,4 @@
-import { Embed, EmbedAuthor, EmbedField, EmbedFooter, EmbedImage, EmbedThumbnail, Channel } from 'discord-models/channel';
+import { Embed, EmbedAuthor, EmbedField, EmbedFooter, EmbedImage, EmbedThumbnail, Channel, Message } from 'discord-models/channel';
 import { Client } from '..';
 
 export default class EmbedBuilder implements Embed {
@@ -67,6 +67,10 @@ export default class EmbedBuilder implements Embed {
         return this.thumbnail = t;
     }
 
+    public send(channel: Channel["id"]): Promise<Message> {
+        return this.client.createMessage(channel, { embed: this.make() });
+    }
+
     protected make(): Embed {
         return {
             color: this.color,
@@ -79,9 +83,5 @@ export default class EmbedBuilder implements Embed {
             type: this.type,
             url: this.url,
         } as Embed
-    }
-
-    public send(channel: Channel["id"]) {
-        return this.client.createMessage(channel, { embed: this.make() });
     }
 }

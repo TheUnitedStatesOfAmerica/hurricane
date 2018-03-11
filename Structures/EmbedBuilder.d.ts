@@ -1,0 +1,31 @@
+import { Embed, EmbedAuthor, EmbedField, EmbedFooter, EmbedImage, EmbedThumbnail, Channel, Message } from 'discord-models/channel';
+import { Client } from '..';
+export default class EmbedBuilder implements Embed {
+    client: Client;
+    author?: EmbedAuthor;
+    color: number;
+    description?: string;
+    fields: EmbedField[];
+    footer?: EmbedFooter;
+    image?: EmbedImage;
+    thumbnail?: EmbedThumbnail;
+    title?: string;
+    type: string;
+    url?: string;
+    constructor(client: Client);
+    setAuthor(a: EmbedAuthor): EmbedAuthor;
+    setAuthorName(n: EmbedAuthor["name"]): void;
+    setAuthorIconUrl(i: EmbedAuthor["icon_url"]): void;
+    setAuthorUrl(i: EmbedAuthor["url"]): void;
+    setColor(c: number): number;
+    setDescription(d: string): string;
+    setFields(a: EmbedField[]): EmbedField[];
+    addField(f: EmbedField): number;
+    setFooter(f: EmbedFooter): EmbedFooter;
+    setFooterIconUrl(f: EmbedFooter["icon_url"]): void;
+    setFooterText(t: EmbedFooter["text"]): void;
+    setImage(i: EmbedImage): EmbedImage;
+    setThumbnail(t: EmbedThumbnail): EmbedThumbnail;
+    send(channel: Channel["id"]): Promise<Message>;
+    protected make(): Embed;
+}
