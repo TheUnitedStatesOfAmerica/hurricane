@@ -1,7 +1,7 @@
 import CommandOptions from "./CommandOptions";
 import Category from "./Category";
 import Context from "../Context";
-import Client from "../../Core/Client";
+
 export default abstract class Command {
     name: string = this.constructor.name;
     usage: string = 'No description specified';

@@ -30,10 +30,9 @@ export default class CommandHandler extends Manager {
         return this.commands;
     }
 
-    public addCommand(Command: Command): Command {
+    public addCommand(command: Command): Command {
         if(this.commands.get(Command.constructor.name)) throw new Error('Command already exists!');
         try {
-            const command: Command = new Command(this.client);
             if(command.category) {
                 const category: Category = this.categories.get(command.category.name);
                 if(category) category.commands.set(Command.constructor.name, command);
@@ -46,8 +45,7 @@ export default class CommandHandler extends Manager {
         }
     }
 
-    public addCategory(Category: Category): Category {
-        const category = new Category(this.client);
+    public addCategory(category: Category): Category {
         this.categories.set(category.name, category);
         return category;
     }
@@ -122,8 +120,11 @@ export default class CommandHandler extends Manager {
 
         const ctx = new Context(this.client, message, args, command);
         command.process_(ctx).then((response: any) => {
-            if(typeof response !== 'string') return;
-            else this.client.createMessage(message.channelId, response);
+            if (typeof response === 'string') {
+                this.client.createMessage(message.channelId, {
+                    content: response,
+                });
+            }
         }, (err: Error) => {
             throw err;
         })

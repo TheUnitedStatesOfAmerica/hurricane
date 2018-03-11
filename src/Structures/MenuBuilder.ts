@@ -4,7 +4,7 @@ import Collector from './Collector';
 import Menu from './Base/Menu';
 import MenuOption from './Base/MenuOption';
 import Client from '../Core/Client';
-import { Snowflake } from 'discord-models/discord-models';
+import { Snowflake } from 'discord-models';
 import { EmbedField } from 'discord-models/channel';
 import { User } from 'discord-models/user';
 
@@ -60,7 +60,7 @@ export default class MenuBuilder extends Menu {
         return false;
     }
 
-    protected await(options: {user: {id: User["id"]}, timeout: number }, resolve: Function, reject: Function) {
+    protected await(options: {user: {id: User["id"]}, timeout: number }, _resolve: Function, _reject: Function) {
         this.collector.await(1, message => message.author.id === options.user.id, options.timeout);
     }
 }
