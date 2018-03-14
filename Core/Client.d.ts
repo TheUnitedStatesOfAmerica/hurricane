@@ -1,5 +1,6 @@
 /// <reference types="ioredis" />
 import Water from "water";
+import Supervisor from './Engine/Supervisor';
 import CommandHandler from './Engine/CommandHandler';
 import * as EventEmitter from "eventemitter3";
 import Awaiter from "./Engine/Awaiter";
@@ -17,6 +18,7 @@ export default class Client extends Water {
     redis: Redis;
     redisConnector: RedisConnector;
     store: StoreContainer;
+    supervisor: Supervisor;
     constructor(token: string, options: {
         prefixes: string[];
         redis: RedisOptions;

@@ -7,8 +7,6 @@ import RedisConnector from "./Engine/RedisConnector";
 import { RedisOptions, Redis } from "ioredis";
 import StoreContainer from "./Store/StoreContainer";
 
-// import some water
-
 export default class Client extends Water {
     public commands: CommandHandler;
     public events: EventEmitter;
@@ -17,8 +15,7 @@ export default class Client extends Water {
     public redis: Redis;
     public redisConnector: RedisConnector;
     public store: StoreContainer;
-    // todo
-    private supervisor: Supervisor;
+    public supervisor: Supervisor;
 
     constructor(token: string, options: { prefixes: string[], redis: RedisOptions }) {
         super({ token: token } as WaterOptions);
