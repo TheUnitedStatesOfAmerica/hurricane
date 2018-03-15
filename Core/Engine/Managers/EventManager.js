@@ -25,41 +25,51 @@ class EventManager extends Manager_1.default {
     async startEventLoop() {
         for (;;) {
             const [, msg] = await this.redisConnection.send_command('blpop', 'exchange:gateway_events', 0);
-            let event;
-            try {
-                event = JSON.parse(msg);
-            }
-            catch (e) {
-                console.log(e);
+            const buf = Buffer.from(msg, 'utf8');
+            const position = buf.lastIndexOf('}');
+            if (!position) {
+                console.log('Websocket message with no shard ID', msg);
                 continue;
             }
-            this.process(event, msg);
+            const sliceIdx = position + 1;
+            const shardIdBuf = buf.slice(sliceIdx);
+            const shardId = shardIdBuf.readUIntLE(0, shardIdBuf.length);
+            const msgToParse = buf.slice(0, sliceIdx).toString('utf8');
+            let event;
+            try {
+                event = JSON.parse(msgToParse);
+            }
+            catch (e) {
+                console.log(e, msgToParse);
+                continue;
+            }
+            this.process(event, shardId, msg.slice(0, sliceIdx));
         }
     }
-    async process(event, rawMessage) {
+    async process(event, shardId, rawMessage) {
         if (event.op === 0) {
             const payload = event.d;
             if (!event.t) {
                 // log the fact that there's no type, this should be a bug
                 return;
             }
-            this.dispatch(event.t, payload);
+            this.dispatch(event.t, shardId, payload);
         }
         else {
-            this.forwardToSharder(rawMessage);
+            this.forwardToSharder(rawMessage, shardId);
         }
     }
-    dispatch(name, event) {
+    dispatch(name, shardId, event) {
         const events = this.events.get(name);
         if (!events) {
             return;
         }
         for (const handler of events) {
-            handler.process(event);
+            handler.process(event, shardId);
         }
     }
-    forwardToSharder(rawMessage) {
-        this.redisConnection.rpush('exchange:sharder_events', rawMessage);
+    forwardToSharder(rawMessage, shardId) {
+        this.redisConnection.rpush(`exchange:sharder:${shardId}`, rawMessage);
     }
 }
 exports.default = EventManager;

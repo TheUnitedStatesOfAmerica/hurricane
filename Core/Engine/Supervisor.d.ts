@@ -4,4 +4,5 @@ import Client from "../Client";
 export default class Supervisor {
     managers: Collection<Manager>;
     constructor(client: Client);
+    init(): void;
 }

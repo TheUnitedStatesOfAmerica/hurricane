@@ -26,7 +26,7 @@ export default class Loader {
      * @public
      */
     loadCommands(absolutePath: string): Promise<void>;
-    loadEvents(absolutePath: string): Promise<void>;
+    loadEvents(absolutePath: string): Promise<string[]>;
     /**
      * Reads the filenames of a directory, resolving to an array of them.
      *

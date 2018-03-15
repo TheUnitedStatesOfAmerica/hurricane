@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs = require("fs");
 const path = require("path");
-const EventManager_1 = require("./Managers/EventManager");
 class Loader {
     constructor(client) {
         this.client = client;
@@ -42,15 +41,7 @@ class Loader {
         }
     }
     async loadEvents(absolutePath) {
-        const manager = this.client.supervisor.managers.get("EventManager");
-        if (!manager || !(manager instanceof EventManager_1.default)) {
-            return;
-        }
-        const filenames = await this.readDirectory(absolutePath);
-        for (const filename of filenames) {
-            const event = require(filename);
-            manager.addEvent(event);
-        }
+        return this.readDirectory(absolutePath);
     }
     /**
      * Reads the filenames of a directory, resolving to an array of them.

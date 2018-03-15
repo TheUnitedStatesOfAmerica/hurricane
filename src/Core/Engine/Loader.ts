@@ -1,7 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import Client from '../Client';
-import EventManager from './Managers/EventManager';
 
 export default class Loader {
     public constructor(private client: Client) {
@@ -45,20 +44,8 @@ export default class Loader {
         }
     }
 
-    public async loadEvents(absolutePath: string): Promise<void> {
-        const manager = this.client.supervisor.managers.get("EventManager");
-
-        if (!manager || !(manager instanceof EventManager)) {
-            return;
-        }
-
-        const filenames = await this.readDirectory(absolutePath);
-
-        for (const filename of filenames) {
-            const event = require(filename);
-
-            manager.addEvent(event);
-        }
+    public async loadEvents(absolutePath: string): Promise<string[]> {
+        return this.readDirectory(absolutePath);
     }
 
     /**

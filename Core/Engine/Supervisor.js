@@ -8,6 +8,11 @@ class Supervisor {
         this.managers = new branches_1.Collection();
         this.managers.set("EventManager", new EventManager_1.default(client, client.redisConnector));
     }
+    init() {
+        this.managers.map((m) => {
+            m.init();
+        });
+    }
 }
 exports.default = Supervisor;
 //# sourceMappingURL=Supervisor.js.map

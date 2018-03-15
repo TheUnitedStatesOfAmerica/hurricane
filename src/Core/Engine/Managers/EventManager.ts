@@ -6,7 +6,7 @@ import { GatewayEvent, DispatchEventTypeName, DispatchEventType } from 'discord-
 import Event from '../../../Structures/Base/Event';
 
 export default class EventManager extends Manager {
-    public events: Map<DispatchEventTypeName, Event[]> = new Map();
+    public events: Map<DispatchEventTypeName, Event<any>[]> = new Map();
     protected redisConnector: RedisConnector;
     protected redisConnection: Redis;
     protected client: Client;
@@ -18,7 +18,7 @@ export default class EventManager extends Manager {
         this.client = client;
     }
 
-    public addEvent(event: Event) {
+    public addEvent(event: Event<any>) {
         const events = this.events.get(event.eventName);
 
         if (events) {
@@ -35,27 +35,41 @@ export default class EventManager extends Manager {
 
     protected async startEventLoop() {
         for ( ; ; ) {
-            const [, msg] = await this.redisConnection.send_command(
+            const [, msg]: [any, string] = await this.redisConnection.send_command(
                 'blpop',
                 'exchange:gateway_events',
                 0,
             );
+            const buf = Buffer.from(msg, 'utf8');
 
-            let event;
+            const position = buf.lastIndexOf('}');
 
-            try {
-                event = JSON.parse(msg);
-            } catch (e) {
-                console.log(e);
+            if (!position) {
+                console.log('Websocket message with no shard ID', msg);
 
                 continue;
             }
 
-            this.process(event, msg);
+            const sliceIdx = position + 1;
+            const shardIdBuf = buf.slice(sliceIdx);
+            const shardId = shardIdBuf.readUIntLE(0, shardIdBuf.length);
+
+            const msgToParse = buf.slice(0, sliceIdx).toString('utf8');
+            let event;
+
+            try {
+                event = JSON.parse(msgToParse);
+            } catch (e) {
+                console.log(e, msgToParse);
+
+                continue;
+            }
+
+            this.process(event, shardId, msg.slice(0, sliceIdx));
         }
     }
 
-    protected async process(event: GatewayEvent, rawMessage: string) {
+    protected async process(event: GatewayEvent, shardId: number, rawMessage: string) {
         if (event.op === 0) {
             const payload = event.d as DispatchEventType;
 
@@ -64,13 +78,13 @@ export default class EventManager extends Manager {
                 return;
             }
 
-            this.dispatch(event.t, payload);
+            this.dispatch(event.t, shardId, payload);
         } else {
-            this.forwardToSharder(rawMessage);
+            this.forwardToSharder(rawMessage, shardId);
         }
     }
 
-    private dispatch(name: DispatchEventTypeName, event: DispatchEventType) {
+    private dispatch(name: DispatchEventTypeName, shardId: number, event: DispatchEventType) {
         const events = this.events.get(name);
 
         if (!events) {
@@ -78,11 +92,11 @@ export default class EventManager extends Manager {
         }
 
         for (const handler of events) {
-            handler.process(event);
+            handler.process(event, shardId);
         }
     }
 
-    private forwardToSharder(rawMessage: string) {
-        this.redisConnection.rpush('exchange:sharder_events', rawMessage);
+    private forwardToSharder(rawMessage: string, shardId: number) {
+        this.redisConnection.rpush(`exchange:sharder:${shardId}`, rawMessage);
     }
 }

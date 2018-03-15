@@ -1,5 +1,5 @@
 import { DispatchEventTypeName } from "discord-models/event";
-export default abstract class Event {
+export default abstract class Event<T> {
     abstract eventName: DispatchEventTypeName;
-    abstract process<T>(data: T): Promise<null>;
+    abstract process(data: T, shardId: number): Promise<void>;
 }
