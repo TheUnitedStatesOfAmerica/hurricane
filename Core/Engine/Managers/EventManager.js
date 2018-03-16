@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Manager_1 = require("../../../Structures/Manager");
+const event_1 = require("discord-models/event");
 class EventManager extends Manager_1.default {
     constructor(client, redisConnector) {
         super();
@@ -60,6 +61,9 @@ class EventManager extends Manager_1.default {
         }
     }
     dispatch(name, shardId, event) {
+        if (name == event_1.DispatchEventTypeName.MessageCreate) {
+            this.client.events.emit('message', event);
+        }
         const events = this.events.get(name);
         if (!events) {
             return;
