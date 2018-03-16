@@ -5,11 +5,11 @@
   "main": "index.js",
   "dependencies": {
     "branches": "github:yuki-bot/branches",
-    "discord-models": "yuki-bot/discord-models.ts",
+    "discord-models": "github:yuki-bot/discord-models.ts",
     "eventemitter3": "^3.0.1",
     "ioredis": "^3.2.2",
     "minimist": "^1.2.0",
-    "water": "yuki-bot/water"
+    "water": "github:yuki-bot/water"
   },
   "devDependencies": {
     "@types/ioredis": "^3.2.5"
