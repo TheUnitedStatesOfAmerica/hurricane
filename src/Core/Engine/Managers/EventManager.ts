@@ -6,7 +6,7 @@ import { GatewayEvent, DispatchEventTypeName, DispatchEventType } from 'discord-
 import Event from '../../../Structures/Base/Event';
 
 export default class EventManager extends Manager {
-    public events: Map<DispatchEventTypeName, Event<any>[]> = new Map();
+    public events: Map<DispatchEventTypeName, Event<DispatchEventType>[]> = new Map();
     protected redisConnector: RedisConnector;
     protected redisConnection: Redis;
     protected client: Client;
