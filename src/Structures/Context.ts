@@ -12,8 +12,8 @@ export default class Context {
     private flags_?: string[];
     private command_: Command;
     // private guild: RedisStore.guild.get(guildId) ???
-    private embed_: EmbedBuilder = new EmbedBuilder(this.client);
-    private menu_: MenuBuilder = new MenuBuilder(this.client, this.message.channelId);
+    private embed_: EmbedBuilder;
+    private menu_: MenuBuilder;
 
     constructor(client: Client, message: Message, args: string[], command: Command, flags?: string[]) {
         this.client = client;
@@ -21,6 +21,8 @@ export default class Context {
         this.args = args;
         this.flags_ = flags;
         this.command_ = command;
+        this.embed_ = new EmbedBuilder(this.client);
+        this.menu_ = new MenuBuilder(this.client, this.message.channel_id);
     }
 
     get msg() {

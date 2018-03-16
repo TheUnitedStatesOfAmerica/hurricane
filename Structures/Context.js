@@ -5,14 +5,13 @@ const MenuBuilder_1 = require("./MenuBuilder");
 const minimist = require('minimist');
 class Context {
     constructor(client, message, args, command, flags) {
-        // private guild: RedisStore.guild.get(guildId) ???
-        this.embed_ = new EmbedBuilder_1.default(this.client);
-        this.menu_ = new MenuBuilder_1.default(this.client, this.message.channelId);
         this.client = client;
         this.message = message;
         this.args = args;
         this.flags_ = flags;
         this.command_ = command;
+        this.embed_ = new EmbedBuilder_1.default(this.client);
+        this.menu_ = new MenuBuilder_1.default(this.client, this.message.channel_id);
     }
     get msg() {
         return this.message;
