@@ -31,7 +31,7 @@ export default class Client extends Water {
         // except through its own methods.
         // This is to avoid the actual commands being mutable
         this.commands = new CommandHandler(this);
-        this.commands.loadCommands();
+        this.commands.init();
         this.supervisor.init();
     }
 }

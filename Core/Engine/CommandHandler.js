@@ -24,7 +24,7 @@ class CommandHandler extends Manager_1.default {
         if (this.commands.get(Command.constructor.name))
             throw new Error('Command already exists!');
         try {
-            const command = Command.constructor.call(this.client);
+            const command = new Command(this.client);
             if (command.category) {
                 const category = this.categories.get(command.category.name);
                 if (category)

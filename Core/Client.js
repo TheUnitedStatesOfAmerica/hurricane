@@ -22,7 +22,7 @@ class Client extends water_1.default {
         // except through its own methods.
         // This is to avoid the actual commands being mutable
         this.commands = new CommandHandler_1.default(this);
-        this.commands.loadCommands();
+        this.commands.init();
         this.supervisor.init();
     }
 }

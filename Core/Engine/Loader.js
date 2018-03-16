@@ -37,7 +37,7 @@ class Loader {
     async loadCommands(absolutePath) {
         const filenames = await this.readDirectory(absolutePath);
         for (const filename of filenames) {
-            this.client.commands.addCommand(require(filename));
+            this.client.commands.addCommand(require(filename).default);
         }
     }
     async loadEvents(absolutePath) {

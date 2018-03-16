@@ -85,6 +85,10 @@ export default class EventManager extends Manager {
     }
 
     private dispatch(name: DispatchEventTypeName, shardId: number, event: DispatchEventType) {
+        if (name == DispatchEventTypeName.MessageCreate) {
+            this.client.events.emit('message', event);
+        }
+
         const events = this.events.get(name);
 
         if (!events) {

@@ -34,7 +34,7 @@ export default class CommandHandler extends Manager {
     public addCommand<T extends Command>(Command: T): Command {
         if(this.commands.get(Command.constructor.name)) throw new Error('Command already exists!');
         try {
-            const command: Command = Command.constructor.call(this.client);
+            const command: Command = new (Command as any)(this.client);
 
             if(command.category) {
                 const category: Category = this.categories.get(command.category.name);
