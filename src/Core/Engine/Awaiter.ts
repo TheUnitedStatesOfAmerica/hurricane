@@ -19,7 +19,7 @@ export default class Awaiter {
     }
 
     invokeAllCollectors(message: Message): void[] | false {
-        const collectors = this.collectors.get(message.channelId);
+        const collectors = this.collectors.get(message.channel_id);
         if(!collectors) return false;
         return collectors.map(c => c.check(message));
     }

@@ -61,7 +61,7 @@ export default class Collector extends EventEmitter {
     }
 
     public check(message: Message) {
-        if (message.channelId.value === this.channelId) {
+        if (message.channel_id.value === this.channelId) {
             this.emit(CollectorEvent.Message, message);
         }
     }

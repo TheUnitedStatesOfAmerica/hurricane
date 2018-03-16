@@ -85,7 +85,7 @@ class CommandHandler extends Manager_1.default {
         if (command.nsfw) {
             let cachedChannel;
             try {
-                cachedChannel = await this.client.store.channels.get(message.channelId);
+                cachedChannel = await this.client.store.channels.get(message.channel_id);
             }
             catch (e) {
                 // TODO: log this, an error occurred while deserializing an
@@ -105,7 +105,7 @@ class CommandHandler extends Manager_1.default {
         const ctx = new Context_1.default(this.client, message, args, command);
         command.process_(ctx).then((response) => {
             if (typeof response === 'string') {
-                this.client.createMessage(message.channelId, {
+                this.client.createMessage(message.channel_id, {
                     content: response,
                 });
             }

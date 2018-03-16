@@ -102,7 +102,7 @@ export default class CommandHandler extends Manager {
             let cachedChannel;
 
             try {
-                cachedChannel = await this.client.store.channels.get(message.channelId);
+                cachedChannel = await this.client.store.channels.get(message.channel_id);
             } catch (e) {
                 // TODO: log this, an error occurred while deserializing an
                 // object from redis!
@@ -124,9 +124,10 @@ export default class CommandHandler extends Manager {
         }
 
         const ctx = new Context(this.client, message, args, command);
+
         command.process_(ctx).then((response: any) => {
             if (typeof response === 'string') {
-                this.client.createMessage(message.channelId, {
+                this.client.createMessage(message.channel_id, {
                     content: response,
                 });
             }

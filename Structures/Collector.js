@@ -40,7 +40,7 @@ class Collector extends eventemitter3_1.EventEmitter {
         });
     }
     check(message) {
-        if (message.channelId.value === this.channelId) {
+        if (message.channel_id.value === this.channelId) {
             this.emit(CollectorEvent.Message, message);
         }
     }

@@ -20,7 +20,7 @@ class Awaiter {
         return collector;
     }
     invokeAllCollectors(message) {
-        const collectors = this.collectors.get(message.channelId);
+        const collectors = this.collectors.get(message.channel_id);
         if (!collectors)
             return false;
         return collectors.map(c => c.check(message));
